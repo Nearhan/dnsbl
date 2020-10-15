@@ -1,0 +1,17 @@
+type IPDetail {
+  id: ID!
+  createdAt: Time!
+  updatedAt: Time!
+  responseCode: String!
+  ipAddress: String!
+}
+
+type Query {
+  getIPDetails(ipAddress: String!): IPDetail!
+}
+
+type Mutation {
+  enqueue(ipAddresses: [String!]): String! 
+}
+
+scalar Time
