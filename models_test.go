@@ -63,14 +63,24 @@ func TestMakeUpdateStmt(t *testing.T) {
 	}
 
 	act := makeUpdateStmt(ipds)
-	exp := "Update ipdetails SET updated_at='2020-10-14T15:00:21Z', response_code='3' WHERE ip_address='4aeec477-2e9d-4cd7-8840-6d3a0a8b7a1b',Update ipdetails SET updated_at='2020-10-14T15:00:21Z', response_code='3' WHERE ip_address='2d3388a2-7106-4116-8ad5-b70dd98b8519'"
+	exp := "Update ipdetails SET updated_at='2020-10-14T15:00:21Z', response_code='3' WHERE ip_address='1.2.3.4',Update ipdetails SET updated_at='2020-10-14T15:00:21Z', response_code='3' WHERE ip_address='1.3.3.4'"
 	require.Equal(t, exp, act)
 }
 
 func TestDiffIPDetail(t *testing.T) {
 	ti, err := time.Parse(time.RFC3339, "2020-10-14T15:00:21Z")
 	require.NoError(t, err)
-	ipds := []IPDetail{
+	newIPd := []IPDetail{
+		{
+			ID:           "ff9ec662-cfe9-49ae-9372-29e711821fa9",
+			CreatedAt:    ti.Add(1 * time.Hour),
+			UpdatedAt:    ti.Add(1 * time.Hour),
+			ResponseCode: "2",
+			IPAddress:    "1.2.3.4",
+		},
+	}
+
+	foundIPd := []IPDetail{
 		{
 			ID:           "4aeec477-2e9d-4cd7-8840-6d3a0a8b7a1b",
 			CreatedAt:    ti,
@@ -80,8 +90,17 @@ func TestDiffIPDetail(t *testing.T) {
 		},
 	}
 
-	insert, update := diffIPDetails(ipds, ipds)
+	mergedUpdate := IPDetail{
+		ID:           "4aeec477-2e9d-4cd7-8840-6d3a0a8b7a1b",
+		CreatedAt:    ti,
+		UpdatedAt:    ti.Add(1 * time.Hour),
+		ResponseCode: "2",
+		IPAddress:    "1.2.3.4",
+	}
+
+	insert, update := diffIPDetails(newIPd, foundIPd)
 	require.Empty(t, insert)
 	require.Len(t, update, 1)
+	require.Equal(t, mergedUpdate, update[0])
 
 }

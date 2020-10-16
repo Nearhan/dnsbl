@@ -8,7 +8,7 @@ import (
 )
 
 // Schema for application
-const schema string = `CREATE TABLE IF NOT EXISTS ipdetails (
+var createIpDetailTable = `CREATE TABLE IF NOT EXISTS ipdetails (
     id TEXT PRIMARY KEY,
     created_at TEXT,
     updated_at TEXT,
@@ -16,16 +16,34 @@ const schema string = `CREATE TABLE IF NOT EXISTS ipdetails (
     ip_address TEXT
 )`
 
+var createUsersTable = `CREATE TABLE IF NOT EXISTS users (
+	id INTEGER PRIMARY KEY,
+	user TEXT,
+	pass TEXT
+)`
+
+var insertBaseUser = `INSERT INTO users (user, pass) VALUES ('%s', '%s');
+`
+
 //InitSchema inits database schema
 func InitSchema(db *sql.DB) error {
-	stmt, err := db.Prepare(schema)
-	if err != nil {
-		return err
+
+	sqls := []string{
+		createIpDetailTable,
+		createUsersTable,
+		fmt.Sprintf(insertBaseUser, "secureworks", hashAndSalt([]byte("password"))),
 	}
 
-	_, err = stmt.Exec()
-	if err != nil {
-		return err
+	for _, s := range sqls {
+		stmt, err := db.Prepare(s)
+		if err != nil {
+			return err
+		}
+
+		_, err = stmt.Exec()
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -60,7 +78,7 @@ func makeUpdateStmt(ipds []IPDetail) string {
 			"Update ipdetails SET updated_at='%s', response_code='%s' WHERE ip_address='%s'",
 			ipd.UpdatedAt.UTC().Format(time.RFC3339),
 			ipd.ResponseCode,
-			ipd.ID,
+			ipd.IPAddress,
 		))
 	}
 	return strings.Join(stmts, ",")
@@ -98,11 +116,10 @@ func diffIPDetails(newDetails, foundDetails []IPDetail) ([]IPDetail, []IPDetail)
 
 	for _, fd := range foundDetails {
 		if ipd, ok := ndm[fd.IPAddress]; ok {
-
-			ipd.UpdatedAt = fd.UpdatedAt
-			ipd.ResponseCode = fd.ResponseCode
+			fd.UpdatedAt = ipd.UpdatedAt
+			fd.ResponseCode = ipd.ResponseCode
 			delete(ndm, fd.IPAddress)
-			update = append(update, ipd)
+			update = append(update, fd)
 		}
 	}
 

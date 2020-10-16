@@ -9,4 +9,5 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/stretchr/testify v1.4.0
 	github.com/vektah/gqlparser/v2 v2.1.0
+	golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550
 )

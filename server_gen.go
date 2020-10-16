@@ -221,7 +221,8 @@ type Mutation {
   enqueue(ipAddresses: [String!]): String! 
 }
 
-scalar Time`, BuiltIn: false},
+scalar Time
+`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
 

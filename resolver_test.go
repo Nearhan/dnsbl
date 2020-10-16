@@ -26,7 +26,7 @@ func TestIsValidIP(t *testing.T) {
 
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
-			act := isValidIP(tc.ip)
+			act := isValidIP4(tc.ip)
 			require.Equal(t, tc.valid, act)
 		})
 	}

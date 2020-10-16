@@ -5,6 +5,7 @@ package dnsbl
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -22,7 +23,12 @@ VALUES
 `
 
 func setupDB(t *testing.T, db *sql.DB) {
-	sqls := []string{schema, testData}
+	sqls := []string{
+		createIpDetailTable,
+		createUsersTable,
+		fmt.Sprintf(insertBaseUser, "test", hashAndSalt([]byte("test"))),
+		testData,
+	}
 
 	for _, s := range sqls {
 		stmt, err := db.Prepare(s)
@@ -125,4 +131,14 @@ func TestEnqueue(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 2, len(act))
 
+}
+
+func TestAuth(t *testing.T) {
+	db, err := sql.Open("sqlite3", "testdata/test.db")
+	require.NoError(t, err)
+
+	//setup db
+	setupDB(t, db)
+	defer tearDownDB()
+	require.True(t, isUserAuthorized(db, "test", "test"))
 }

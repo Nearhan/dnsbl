@@ -8,11 +8,12 @@ import (
 )
 
 func (r *mutationResolver) Enqueue(ctx context.Context, ipAddresses []string) (string, error) {
-	return "", nil
+	err := Enqueue(ctx, r.db, ipAddresses)
+	return "", err
 }
 
 func (r *queryResolver) GetIPDetails(ctx context.Context, ipAddress string) (*IPDetail, error) {
-	return nil, nil
+	return GetIPDetail(ctx, r.db, ipAddress)
 }
 
 // Mutation returns MutationResolver implementation.

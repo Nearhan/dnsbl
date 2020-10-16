@@ -25,7 +25,7 @@ type Resolver struct {
 	db *sql.DB
 }
 
-// New
+// NewResolver returns a new resolver
 func NewResolver(db *sql.DB) *Resolver {
 	return &Resolver{
 		db: db,
@@ -113,15 +113,18 @@ func Enqueue(ctx context.Context, db *sql.DB, ips []string) error {
 	// diff into update and insert ip details
 	insert, update := diffIPDetails(newDetails.ipds, foundDetails)
 
-	_, err = db.Exec(makeInsertStmt(insert))
-	if err != nil {
-		return fmt.Errorf("error when inserting ip details %s", err)
-
+	if len(insert) > 0 {
+		_, err = db.Exec(makeInsertStmt(insert))
+		if err != nil {
+			return fmt.Errorf("error when inserting ip details %s", err)
+		}
 	}
 
-	_, err = db.Exec(makeUpdateStmt(update))
-	if err != nil {
-		return fmt.Errorf("error when update ip details %s", err)
+	if len(update) > 0 {
+		_, err := db.Exec(makeUpdateStmt(update))
+		if err != nil {
+			return fmt.Errorf("error when update ip details %s", err)
+		}
 	}
 
 	return nil
