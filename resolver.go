@@ -20,6 +20,8 @@ var ErrInvalidIP = errors.New("not valid ip")
 //ErrNotFound ip detail not found
 var ErrNotFound = errors.New("ip detail not found")
 
+const dnsblHost = "zen.spamhaus.org"
+
 // Resolver holds deps
 type Resolver struct {
 	db *sql.DB
@@ -163,7 +165,7 @@ func lookupIP(wg *sync.WaitGroup, ip string, ipds *IPDetailSlice) {
 	}
 
 	ip = reverseIP(ip)
-	ip = fmt.Sprintf("%s.%s", ip, "zen.spamhaus.org")
+	ip = fmt.Sprintf("%s.%s", ip, dnsblHost)
 	res, err := net.LookupIP(ip)
 	if err != nil {
 		log.Printf("error when looking up %s \n %s", ip, err)
