@@ -75,7 +75,7 @@ func TestDiffIPDetail(t *testing.T) {
 			ID:           "ff9ec662-cfe9-49ae-9372-29e711821fa9",
 			CreatedAt:    ti.Add(1 * time.Hour),
 			UpdatedAt:    ti.Add(1 * time.Hour),
-			ResponseCode: "2",
+			ResponseCode: "127.0.0.2",
 			IPAddress:    "1.2.3.4",
 		},
 	}
@@ -85,7 +85,7 @@ func TestDiffIPDetail(t *testing.T) {
 			ID:           "4aeec477-2e9d-4cd7-8840-6d3a0a8b7a1b",
 			CreatedAt:    ti,
 			UpdatedAt:    ti,
-			ResponseCode: "3",
+			ResponseCode: "",
 			IPAddress:    "1.2.3.4",
 		},
 	}
@@ -94,7 +94,7 @@ func TestDiffIPDetail(t *testing.T) {
 		ID:           "4aeec477-2e9d-4cd7-8840-6d3a0a8b7a1b",
 		CreatedAt:    ti,
 		UpdatedAt:    ti.Add(1 * time.Hour),
-		ResponseCode: "2",
+		ResponseCode: "127.0.0.2",
 		IPAddress:    "1.2.3.4",
 	}
 

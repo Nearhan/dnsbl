@@ -17,9 +17,9 @@ import (
 const testData = `
 INSERT INTO ipdetails (id, created_at, updated_at, response_code, ip_address)
 VALUES
-  ("4aeec477-2e9d-4cd7-8840-6d3a0a8b7a1b", "2020-10-13T20:56:32+00:00", "2020-10-13T20:56:32+00:00", "3", "1.2.3.4"),
-  ("2d3388a2-7106-4116-8ad5-b70dd98b8519", "2020-10-13T20:56:32+00:00", "2020-10-13T20:56:32+00:00", "3", "1.3.3.4"),
-  ("d3beeecc-43a5-4891-99b3-bb1aa9d9a0d9", "2020-10-13T20:56:32+00:00", "2020-10-13T20:56:32+00:00", "3", "1.4.3.4")
+  ("4aeec477-2e9d-4cd7-8840-6d3a0a8b7a1b", "2020-10-13T20:56:32+00:00", "2020-10-13T20:56:32+00:00", "127.0.0.2", "1.2.3.4"),
+  ("2d3388a2-7106-4116-8ad5-b70dd98b8519", "2020-10-13T20:56:32+00:00", "2020-10-13T20:56:32+00:00", "127.0.0.2", "1.3.3.4"),
+  ("d3beeecc-43a5-4891-99b3-bb1aa9d9a0d9", "2020-10-13T20:56:32+00:00", "2020-10-13T20:56:32+00:00", "127.0.0.2", "1.4.3.4")
 `
 
 func setupDB(t *testing.T, db *sql.DB) {
@@ -72,7 +72,7 @@ func TestGetIPdetail(t *testing.T) {
 		ID:           "4aeec477-2e9d-4cd7-8840-6d3a0a8b7a1b",
 		CreatedAt:    ti,
 		UpdatedAt:    ti,
-		ResponseCode: "3",
+		ResponseCode: "127.0.0.2",
 		IPAddress:    "1.2.3.4",
 	}
 
@@ -99,14 +99,14 @@ func TestListGetIPdetail(t *testing.T) {
 			ID:           "4aeec477-2e9d-4cd7-8840-6d3a0a8b7a1b",
 			CreatedAt:    ti,
 			UpdatedAt:    ti,
-			ResponseCode: "3",
+			ResponseCode: "127.0.0.2",
 			IPAddress:    "1.2.3.4",
 		},
 		{
 			ID:           "2d3388a2-7106-4116-8ad5-b70dd98b8519",
 			CreatedAt:    ti,
 			UpdatedAt:    ti,
-			ResponseCode: "3",
+			ResponseCode: "127.0.0.2",
 			IPAddress:    "1.3.3.4",
 		},
 	}
