@@ -90,7 +90,8 @@ func listIPDetails(ctx context.Context, db *sql.DB, ips []string) ([]IPDetail, e
 	return ipds, nil
 }
 
-// Enqueue ....
+// Enqueue spins off a goroutine for each ip passed in
+// does the look up then does a bulk insert into sqlite
 func Enqueue(ctx context.Context, db *sql.DB, ips []string) error {
 
 	for _, ip := range ips {
@@ -152,6 +153,7 @@ func isValidIP4(addr string) bool {
 	return false
 }
 
+// lookupIP searches against dnbsl and adds to the ipds slice
 func lookupIP(wg *sync.WaitGroup, ip string, ipds *IPDetailSlice) {
 	defer wg.Done()
 	ti := time.Now().UTC()
